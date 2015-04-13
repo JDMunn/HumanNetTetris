@@ -9,7 +9,7 @@ import java.io.FileWriter;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
-//IMPORT FANN LIBRARY
+//IMPORT FANN LIBRARY WHEN COMPILING IN UNIX TYPE "javac -cp '.:org.example.jar' .java" or LINUX " OR LINUX "javac -cp .;jwitter.jar MyClass.java" 
 
 public class ANNBot extends TetrisBot {
     
@@ -24,9 +24,6 @@ public class ANNBot extends TetrisBot {
     
     float[] inputs = new float[]{ -1, 1 };
     float[] outputs = fann.run( inputs );
-    
-
-    
     
     public ANNBot() {
         numberRotations = 0;
@@ -72,7 +69,7 @@ public class ANNBot extends TetrisBot {
         currPiece = current_piece;
         currBoard = board;
 
-        //set up input vector data
+        //set up input vector data by putting all inputs together into the same array
         double[] contour = board.getContour();
         int[] currPieceArray = getPieceList(current_piece);
         int[] nextPieceArray = getPieceList(next_piece); 
@@ -101,21 +98,11 @@ public class ANNBot extends TetrisBot {
             }
         }
 
-
-        /*
-        Here we get the input array as was fed into the ANN. Need to convert the board, current_piece, next_piece into one single array.
-        say single_input[].
-
-        */
-
-
-
-        /*
-        The resulting single_input array is the input to the ANN run method. 
-        double[] output = fann.run(single_input);
+	
+        double[] output = fann.run(single_input); //Generates the output data
         
-        The output array then needs to be converted into a TetrisMove that is finally returned and the move is made.
-        */
+	// The output array then needs to be converted into a TetrisMove that is finally returned and the move is made.
+        // Michael's code goes here
 
 
         //set up output vector data
