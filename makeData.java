@@ -5,6 +5,8 @@ import java.lang.String;
 public class makeData{
 	public static ArrayList<ArrayList<Double>> xs = new ArrayList<>();
 	public static ArrayList<Double> ys = new ArrayList<>();
+
+  public static final String OUTPUT_FILE = "Training.data";
 	
 	public makeData(){
 
@@ -58,7 +60,7 @@ public class makeData{
 	
 	public static void main(String[] args) throws FileNotFoundException, IOException{
 
-		Scanner scan = new Scanner(new File("higgs_training_set.csv"));
+		Scanner scan = new Scanner(new File(args[0]));
     	scan.useDelimiter(",");
     	while (scan.hasNextLine()) {  
         	String line = (scan.nextLine());
@@ -84,7 +86,7 @@ public class makeData{
 
 
 
-     	File fout = new File("Higgs2.data");
+     	File fout = new File(args[1]);
      	FileOutputStream fos  = new FileOutputStream(fout);
 
      	BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(fos));
