@@ -61,18 +61,33 @@ public class ANNBot extends TetrisBot {
         }
         return output;
     }
-    
-    
-    // return the left-most column of where you want to play
-    public TetrisMove chooseMove(TetrisBoard board, TetrisPiece current_piece, TetrisPiece next_piece) {
-        
-        currPiece = current_piece;
-        currBoard = board;
+    public TetrisMove getOutputMove(double[] output, TetrisPiece currPiece){
+        int numRotations = -1;
+        int leftMostCoordinate = -1;
+        double currCoordMax = -100;
+        int maxIndex = 0;
 
-        //set up input vector data by putting all inputs together into the same array
-        double[] contour = board.getContour();
-        int[] currPieceArray = getPieceList(current_piece);
-        int[] nextPieceArray = getPieceList(next_piece); 
+        for( int i = 0; i< output.length - 4; i++){
+            if (output[i]>currCoordMax){
+                currCoordMax = output[i];
+                maxIndex = i;
+            }
+        }
+        leftMostCoordinate = maxIndex;
+
+        double currRotateMax = -100;
+        for( int i = output.length-4; i< output.length; i++){
+            if (output[i]>currRotateMax){
+                currRotateMax = output[i];
+                numRotations = i-output.length;
+            }
+        }
+
+
+        return new TetrisMove(currPiece.rotate(numRotations) , leftMostCoordinate);
+    }
+    
+    public double[] createANNInput(double[] contour, int[] currPieceArray, int[] nextPieceArray){
         double[] finalInput = new double[contour.length + currPieceArray.length + nextPieceArray.length];
         int index = 0;
         for (int i = 0; i < contour.length; i ++){
@@ -87,6 +102,20 @@ public class ANNBot extends TetrisBot {
             finalInput[index] = nextPieceArray[i];
             index++;
         }
+    }
+    // return the left-most column of where you want to play
+    public TetrisMove chooseMove(TetrisBoard board, TetrisPiece current_piece, TetrisPiece next_piece) {
+        
+        currPiece = current_piece;
+        currBoard = board;
+
+        //set up input vector data by putting all inputs together into the same array
+        double[] contour = board.getContour();
+        int[] currPieceArray = getPieceList(current_piece);
+        int[] nextPieceArray = getPieceList(next_piece); 
+        double[] finalInput = createANNInput(contour, currPieceArray , nextPieceArray);
+
+
 
         currBoard.viewIncomingPiece(current_piece, colPosition);
 
@@ -98,37 +127,12 @@ public class ANNBot extends TetrisBot {
             }
         }
 
-	
-        double[] output = fann.run(single_input); //Generates the output data
+	   // I , MICHAEL KAUZMANN, THINK THAT THE DOUBLE[] FINALiNPUT GOES INTO THE FANN.run();
+        double[] output = fann.run(finalInput); //Generates the output data  
         
 	// The output array then needs to be converted into a TetrisMove that is finally returned and the move is made.
         // Michael's code goes here
+        return getOutputMove(output, current_piece);
 
-
-        //set up output vector data
-        int[] output = new int[14];
-        rotations %= 4;
-        output[colPosition] = 1;
-        output[10 + rotations] = 1;
-        System.out.println(Arrays.toString(contour));
-        //        System.out.println("n:" + Arrays.toString(nextPieceArray));
-        //        System.out.println(rotations);
-
-        waitForPlay = true;
-        int oldPosition = colPosition;
-        colPosition = board.width / 2;
-        currBoard.viewIncomingPiece(null, 0);
-
-        //write input and output vectors to output.txt
-        try {
-            pw.append(Arrays.toString(finalInput)+ "*" + Arrays.toString(output) + "\n");
-            pw.flush();
-        }
-        catch (IOException e){}
-        rotations = 0;
-
-        //        System.out.println(current_piece);
-        fann.close();
-        return new TetrisMove(currPiece, oldPosition);
     }
 }
