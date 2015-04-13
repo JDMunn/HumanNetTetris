@@ -58,8 +58,8 @@ public class makeData{
      	BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(fos));
 
      	int header1 = xs.size();
-     	int header2 = xs.get(0).size()-1;
-     	int header3 = ys.get(0).size()-1;
+     	int header2 = xs.get(0).size();
+     	int header3 = ys.get(0).size();
 
      	bw.write(header1+" "+header2+ " "+header3+ "\n");
 
