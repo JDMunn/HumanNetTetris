@@ -13,7 +13,7 @@ public class makeData{
 	
 	public static void main(String[] args) throws FileNotFoundException, IOException{
 
-		Scanner scan = new Scanner(new File("output.txt"));
+		Scanner scan = new Scanner(new File(args[0]));
     	//scan.useDelimiter("\\*");
     	while (scan.hasNextLine()) {  
         	String line = (scan.nextLine());
@@ -52,7 +52,7 @@ public class makeData{
      	scan.close();
 
 
-     	File fout = new File("Tetris_ANN.data");
+     	File fout = new File(args[1]);
      	FileOutputStream fos  = new FileOutputStream(fout);
 
      	BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(fos));
