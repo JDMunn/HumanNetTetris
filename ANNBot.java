@@ -84,7 +84,7 @@ public class ANNBot extends TetrisBot {
         }
 
 
-        return new TetrisMove(currPiece.rotate(numRotations) , leftMostCoordinate);
+        return new TetrisMove(currPiece.rotatePiece(numRotations) , leftMostCoordinate);
     }
     
     public double[] createANNInput(double[] contour, int[] currPieceArray, int[] nextPieceArray){
