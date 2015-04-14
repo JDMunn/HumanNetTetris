@@ -61,10 +61,10 @@ public class ANNBot extends TetrisBot {
         }
         return output;
     }
-    public TetrisMove getOutputMove(double[] output, TetrisPiece currPiece){
+    public TetrisMove getOutputMove(float[] output, TetrisPiece currPiece){
         int numRotations = -1;
         int leftMostCoordinate = -1;
-        double currCoordMax = -100;
+        float currCoordMax = -100;
         int maxIndex = 0;
 
         for( int i = 0; i< output.length - 4; i++){
@@ -75,7 +75,7 @@ public class ANNBot extends TetrisBot {
         }
         leftMostCoordinate = maxIndex;
 
-        double currRotateMax = -100;
+        float currRotateMax = -100;
         for( int i = output.length-4; i< output.length; i++){
             if (output[i]>currRotateMax){
                 currRotateMax = output[i];
@@ -87,8 +87,8 @@ public class ANNBot extends TetrisBot {
         return new TetrisMove(currPiece.rotatePiece(numRotations) , leftMostCoordinate);
     }
     
-    public double[] createANNInput(double[] contour, int[] currPieceArray, int[] nextPieceArray){
-        double[] finalInput = new double[contour.length + currPieceArray.length + nextPieceArray.length];
+    public float[] createANNInput(float[] contour, int[] currPieceArray, int[] nextPieceArray){
+        float[] finalInput = new float[contour.length + currPieceArray.length + nextPieceArray.length];
         int index = 0;
         for (int i = 0; i < contour.length; i ++){
             finalInput[index] = contour[i];
@@ -110,10 +110,10 @@ public class ANNBot extends TetrisBot {
         currBoard = board;
 
         //set up input vector data by putting all inputs together into the same array
-        double[] contour = board.getContour();
+        float[] contour = board.getContour();
         int[] currPieceArray = getPieceList(current_piece);
         int[] nextPieceArray = getPieceList(next_piece); 
-        double[] finalInput = createANNInput(contour, currPieceArray , nextPieceArray);
+        float[] finalInput = createANNInput(contour, currPieceArray , nextPieceArray);
 
 
 
@@ -127,8 +127,8 @@ public class ANNBot extends TetrisBot {
             }
         }
 
-	   // I , MICHAEL KAUZMANN, THINK THAT THE DOUBLE[] FINALiNPUT GOES INTO THE FANN.run();
-        double[] output = fann.run(finalInput); //Generates the output data  
+	   // I , MICHAEL KAUZMANN, THINK THAT THE float[] FINALiNPUT GOES INTO THE FANN.run();
+        float[] output = fann.run(finalInput); //Generates the output data  
         
 	// The output array then needs to be converted into a TetrisMove that is finally returned and the move is made.
         // Michael's code goes here
