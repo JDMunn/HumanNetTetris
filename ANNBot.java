@@ -64,21 +64,29 @@ public class ANNBot extends TetrisBot {
     public TetrisMove getOutputMove(float[] output, TetrisPiece currPiece){
         int numRotations = -1;
         int leftMostCoordinate = -1;
+        float maxRotations = -666;
+        float maxLeftMost = -666;
 
         for( int i = 0; i< output.length - 4; i++){
-            if (output[i]==1){
+            if (output[i]>maxLeftMost){
                 leftMostCoordinate = i;
+                maxLeftMost = output[i];
             }
         }
 
         int index = 0;
         for( int i = output.length-4; i< output.length; i++){
-            if (output[i]==1){
+            if (output[i]>maxRotations){
                numRotations = index;
+               maxRotations = output[i];
             }
+            index ++;
         }
 
+        System.out.println("currPiece: \n"+ currPiece);
+        System.out.println("RotatedPiece: \n" + currPiece.rotatePiece(numRotations));
 
+        
         return new TetrisMove(currPiece.rotatePiece(numRotations) , leftMostCoordinate);
     }
     
@@ -110,6 +118,7 @@ public class ANNBot extends TetrisBot {
         float[] contour = new float[temp.length];
         for(int i=0; i<temp.length;i++){
             contour[i] = (float)temp[i];
+            //System.out.println(contour[i]);
         }
         int[] currPieceArray = getPieceList(current_piece);
         int[] nextPieceArray = getPieceList(next_piece); 
@@ -120,9 +129,9 @@ public class ANNBot extends TetrisBot {
         currBoard.viewIncomingPiece(current_piece, colPosition);
 
 	   // I , MICHAEL KAUZMANN, THINK THAT THE float[] FINALiNPUT GOES INTO THE FANN.run();
-        System.out.println(finalInput);
+        //System.out.println(finalInput);
         float[] output = fann.run(finalInput); //Generates the output data  
-        System.out.println(output);
+        //System.out.println(output);
         
 	// The output array then needs to be converted into a TetrisMove that is finally returned and the move is made.
         // Michael's code goes here
