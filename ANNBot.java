@@ -19,18 +19,17 @@ public class ANNBot extends TetrisBot {
     int colPosition;
     TetrisPiece currPiece;
     TetrisBoard currBoard;
-    boolean waitForPlay = true;
     int rotations;
     Fann fann;
     
-    float[] inputs = new float[]{ -1, 1 };
-    float[] outputs = fann.run( inputs );
+    // float[] inputs = new float[]{ -1, 1 };
+    // float[] outputs = fann.run( inputs );
     
     public ANNBot() {
         numberRotations = 0;
         colPosition = 0;
         rotations = 0;
-        fann = new Fann( "TetrisNet.net" );
+        fann = new Fann("TetrisNet.net");
     }
     
     public int[] getPieceList(TetrisPiece piece){
@@ -65,22 +64,17 @@ public class ANNBot extends TetrisBot {
     public TetrisMove getOutputMove(float[] output, TetrisPiece currPiece){
         int numRotations = -1;
         int leftMostCoordinate = -1;
-        float currCoordMax = -100;
-        int maxIndex = 0;
 
         for( int i = 0; i< output.length - 4; i++){
-            if (output[i]>currCoordMax){
-                currCoordMax = output[i];
-                maxIndex = i;
+            if (output[i]==1){
+                leftMostCoordinate = i;
             }
         }
-        leftMostCoordinate = maxIndex;
 
-        float currRotateMax = -100;
+        int index = 0;
         for( int i = output.length-4; i< output.length; i++){
-            if (output[i]>currRotateMax){
-                currRotateMax = output[i];
-                numRotations = i-output.length;
+            if (output[i]==1){
+               numRotations = index;
             }
         }
 
@@ -125,16 +119,10 @@ public class ANNBot extends TetrisBot {
 
         currBoard.viewIncomingPiece(current_piece, colPosition);
 
-        while (waitForPlay) {   
-            try {               
-                Thread.sleep(50);
-            } catch (InterruptedException e) {
-                System.out.println("Execution interrupted!");
-            }
-        }
-
 	   // I , MICHAEL KAUZMANN, THINK THAT THE float[] FINALiNPUT GOES INTO THE FANN.run();
+        System.out.println(finalInput);
         float[] output = fann.run(finalInput); //Generates the output data  
+        System.out.println(output);
         
 	// The output array then needs to be converted into a TetrisMove that is finally returned and the move is made.
         // Michael's code goes here
