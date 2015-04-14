@@ -83,7 +83,8 @@ public class ANNBot extends TetrisBot {
         // return it if it's valid, otherwise just do some random shit
         if(isLegal(newMove))
             return newMove;
-        return TetrisPiece.buildRandomPiece()
+        Random r = new Random();
+        return new TetrisMove(currPiece, r.nextInt(currBoard.width-currPiece.width+1);
     }
 
     // checks that piece is not trying to be placed beyond boundaries
