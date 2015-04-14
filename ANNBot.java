@@ -1,4 +1,3 @@
-
 import java.util.Arrays;
 import java.awt.*;
 import javax.swing.*;
@@ -10,10 +9,10 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import com.googlecode.fannj.*;
-//IMPORT FANN LIBRARY WHEN COMPILING IN UNIX TYPE "javac -cp '.:org.example.jar' .java" or LINUX " OR LINUX "javac -cp .;jwitter.jar MyClass.java" 
+//IMPORT FANN LIBRARY WHEN COMPILING IN UNIX TYPE "javac -cp '.:org.example.jar' .java" or LINUX " OR LINUX "javac -cp .;jwitter.jar MyClass.java"
 
 public class ANNBot extends TetrisBot {
-    
+
     FileWriter pw;
     int numberRotations;
     int colPosition;
@@ -21,17 +20,17 @@ public class ANNBot extends TetrisBot {
     TetrisBoard currBoard;
     int rotations;
     Fann fann;
-    
+
     // float[] inputs = new float[]{ -1, 1 };
     // float[] outputs = fann.run( inputs );
-    
+
     public ANNBot() {
         numberRotations = 0;
         colPosition = 0;
         rotations = 0;
         fann = new Fann("TetrisNet.net");
     }
-    
+
     public int[] getPieceList(TetrisPiece piece){
         int[] output = new int[] {0,0,0,0,0,0,0};
         if(TetrisPiece.buildSquarePiece().toString().equals(piece.toString())){
@@ -78,10 +77,25 @@ public class ANNBot extends TetrisBot {
             }
         }
 
+        // create the new move based on the network
+        TetrisMove newMove = new TetrisMove(currPiece.rotatePiece(numRotations) , leftMostCoordinate);
 
-        return new TetrisMove(currPiece.rotatePiece(numRotations) , leftMostCoordinate);
+        // return it if it's valid, otherwise just do some random shit
+        if(isLegal(newMove))
+            return newMove;
+        return TetrisPiece.buildRandomPiece()
     }
-    
+
+    // checks that piece is not trying to be placed beyond boundaries
+    public boolean isLegal(TetrisMove m) {
+        int leftCol = m.boardCol;
+        TetrisPiece piece = m.piece;
+
+        if (leftCol < 0 || leftCol + piece.width > width)
+            return false;
+        return true;
+    }
+
     public float[] createANNInput(float[] contour, int[] currPieceArray, int[] nextPieceArray){
         float[] finalInput = new float[contour.length + currPieceArray.length + nextPieceArray.length];
         int index = 0;
@@ -101,7 +115,7 @@ public class ANNBot extends TetrisBot {
     }
     // return the left-most column of where you want to play
     public TetrisMove chooseMove(TetrisBoard board, TetrisPiece current_piece, TetrisPiece next_piece) {
-        
+
         currPiece = current_piece;
         currBoard = board;
 
@@ -112,7 +126,7 @@ public class ANNBot extends TetrisBot {
             contour[i] = (float)temp[i];
         }
         int[] currPieceArray = getPieceList(current_piece);
-        int[] nextPieceArray = getPieceList(next_piece); 
+        int[] nextPieceArray = getPieceList(next_piece);
         float[] finalInput = createANNInput(contour, currPieceArray , nextPieceArray);
 
 
@@ -121,9 +135,9 @@ public class ANNBot extends TetrisBot {
 
 	   // I , MICHAEL KAUZMANN, THINK THAT THE float[] FINALiNPUT GOES INTO THE FANN.run();
         System.out.println(finalInput);
-        float[] output = fann.run(finalInput); //Generates the output data  
+        float[] output = fann.run(finalInput); //Generates the output data
         System.out.println(output);
-        
+
 	// The output array then needs to be converted into a TetrisMove that is finally returned and the move is made.
         // Michael's code goes here
         return getOutputMove(output, current_piece);
