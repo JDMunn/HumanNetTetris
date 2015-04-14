@@ -9,6 +9,7 @@ import java.io.FileWriter;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import com.googlecode.fannj.*;
 //IMPORT FANN LIBRARY WHEN COMPILING IN UNIX TYPE "javac -cp '.:org.example.jar' .java" or LINUX " OR LINUX "javac -cp .;jwitter.jar MyClass.java" 
 
 public class ANNBot extends TetrisBot {
@@ -102,6 +103,7 @@ public class ANNBot extends TetrisBot {
             finalInput[index] = nextPieceArray[i];
             index++;
         }
+        return finalInput;
     }
     // return the left-most column of where you want to play
     public TetrisMove chooseMove(TetrisBoard board, TetrisPiece current_piece, TetrisPiece next_piece) {
@@ -110,7 +112,11 @@ public class ANNBot extends TetrisBot {
         currBoard = board;
 
         //set up input vector data by putting all inputs together into the same array
-        float[] contour = board.getContour();
+        double[] temp = board.getContour();
+        float[] contour = new float[temp.length];
+        for(int i=0; i<temp.length;i++){
+            contour[i] = (float)temp[i];
+        }
         int[] currPieceArray = getPieceList(current_piece);
         int[] nextPieceArray = getPieceList(next_piece); 
         float[] finalInput = createANNInput(contour, currPieceArray , nextPieceArray);
