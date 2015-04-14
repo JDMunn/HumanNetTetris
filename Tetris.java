@@ -335,7 +335,7 @@ class TetrisBoard {
         } 
         //NORMALIZING DOESN'T WORK!!!!!!!!!!!!!!!!1!!!!!!!:(666)
         double min = Double.MAX_VALUE;
-        double max = -Double.MAX_VALUE;
+        double max = -Double.MAX_VALUE - 1;
 
         for (int i = 0; i < contour.length; i++) {
             if (contour[i] < min){
