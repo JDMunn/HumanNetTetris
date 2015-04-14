@@ -47,7 +47,6 @@ public class makeData{
 
             xs.add(tempx);
             ys.add(tempy);
-
     	} 
      	scan.close();
 
