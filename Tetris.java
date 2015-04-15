@@ -333,7 +333,6 @@ class TetrisBoard {
         for (int column = 1; column < width; column++) {
             contour[column] = leftMostHeight - getHighestPoint(column);
         } 
-        //NORMALIZING DOESN'T WORK!!!!!!!!!!!!!!!!1!!!!!!!:(666)
         double min = Double.MAX_VALUE;
         double max = -Double.MAX_VALUE - 1;
 
@@ -345,13 +344,13 @@ class TetrisBoard {
                 max = contour[i];
             }
         }
-        if (max != 0){
+        if (max != min){
             for (int i = 0;i < contour.length; i++) {
                 double tmp = contour[i];
-                double normalized = (tmp - min)/(max - min);
-                System.out.println("temp: " + tmp + "\tnormalized: " + normalized);
-                contour[i] = normalized;
-            }
+                double normalized = ((tmp - min)/(max - min));
+                //System.out.println("temp: " + tmp + "\tnormalized: " + normalized);
+                contour[i] = (normalized*2.)-1;
+                }
         }
 
         //System.out.println("min: " + min);
@@ -361,7 +360,7 @@ class TetrisBoard {
 
     public void copyPieceToLocation(TetrisPiece p, int row, int col) {
         Random ra = new Random();
-        int rColor = 1 + ra.nextInt(254);
+        int rColor = ra.nextInt(255);
         for (int r = 0; r < p.height; r++) {
             for (int c = 0; c < p.width; c++) {
                 if (p.blocks[r][c] != 0) {
@@ -543,7 +542,7 @@ class TetrisGame {
         //Constructor con1 = c1.getConstructor();
         //TetrisBot player = (TetrisBot)con1.newInstance();
         
-        TetrisBot player = (TetrisBot) Class.forName(botClassName).newInstance();
+        TetrisBot player = (TetrisBot) Class.forName(botClassName).newInstance(); 
         
         
         int totalScore = 0;

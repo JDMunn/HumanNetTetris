@@ -73,7 +73,7 @@ public class HumanPlayer extends TetrisBot implements KeyListener  {
     public void keyTyped(KeyEvent e){}
 
     public int[] getPieceList(TetrisPiece piece){
-        int[] output = new int[] {0,0,0,0,0,0,0};
+        int[] output = new int[] {-1,-1,-1,-1,-1,-1};
         if(TetrisPiece.buildSquarePiece().toString().equals(piece.toString())){
             output[0] = 1;
         }
@@ -110,10 +110,14 @@ public class HumanPlayer extends TetrisBot implements KeyListener  {
         currBoard = board;
 
         //set up input vector data
-        double[] contour = board.getContour();
-        int[] currPieceArray = getPieceList(current_piece);
+        double[] temp = board.getContour();
+        float[] contour = new float[temp.length];
+        for(int i=0; i<temp.length;i++){
+            contour[i] = (float)temp[i];
+            //System.out.println(contour[i]);
+        }        int[] currPieceArray = getPieceList(current_piece);
         int[] nextPieceArray = getPieceList(next_piece); 
-        double[] finalInput = new double[contour.length + currPieceArray.length + nextPieceArray.length];
+        float[] finalInput = new float[contour.length + currPieceArray.length + nextPieceArray.length];
         int index = 0;
         for (int i = 0; i < contour.length; i ++){
             finalInput[index] = contour[i];
@@ -139,10 +143,13 @@ public class HumanPlayer extends TetrisBot implements KeyListener  {
         }
 
         //set up output vector data
-        int[] output = new int[14];
+        int[] output = new int[board.width + 4];
+        for(int i = 0; i< output.length;i++){
+            output[i] = -1;
+        }
         rotations %= 4;
         output[colPosition] = 1;
-        output[10 + rotations] = 1;
+        output[board.width + rotations] = 1;
         System.out.println(Arrays.toString(contour));
         //        System.out.println("n:" + Arrays.toString(nextPieceArray));
         //        System.out.println(rotations);

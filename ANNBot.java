@@ -32,7 +32,7 @@ public class ANNBot extends TetrisBot {
     }
 
     public int[] getPieceList(TetrisPiece piece){
-        int[] output = new int[] {0,0,0,0,0,0,0};
+        int[] output = new int[] {-1,-1,-1,-1,-1,-1};
         if(TetrisPiece.buildSquarePiece().toString().equals(piece.toString())){
             output[0] = 1;
         }
